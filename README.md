@@ -23,6 +23,6 @@ locals {
 }
 
 module "platform" {
-  source = "git@github.com:FormidableLabs/terraform-aws-platform?ref=1.0.4"
+  source = "github.com/FormidableLabs/terraform-aws-platform?ref=1.0.4"
 }
 ```
