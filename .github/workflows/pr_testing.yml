@@ -1,0 +1,26 @@
+name: Test Suites for PR
+on:
+  pull_request:
+
+jobs:
+  static-analysis-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Start LocalStack
+        run: |
+          pip install --upgrade pyopenssl
+          pip install localstack awscli-local[ver1] terraform-local # install LocalStack cli and awslocal
+          docker pull localstack/localstack         # Make sure to pull the latest version of the image
+          localstack start -d                       # Start LocalStack in the background
+
+          echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
+          localstack wait -t 30                     # to become ready before timing out
+          echo "Startup complete"
+
+      - name: Static Analysis Tests
+        id: static-analysis-tests
+        uses: ./.github/actions/tests_static_analysis
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
