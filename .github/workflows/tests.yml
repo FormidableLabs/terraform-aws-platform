@@ -37,36 +37,36 @@ jobs:
           TF_CMD: ${{ steps.tfplan.outputs.cmd }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          let stdout = '';
-          let stderr = '';
+          script: |
+            let stdout = '';
+            let stderr = '';
 
-          const options = {};
-          options.listeners = {
-            stdout: (data) => {
-              stdout += data.toString();
-            },
-            stderr: (data) => {
-              stderr += data.toString();
-            }
-          };
-          await exec.exec('cat', ['tfplan.txt'], options);
+            const options = {};
+            options.listeners = {
+              stdout: (data) => {
+                stdout += data.toString();
+              },
+              stderr: (data) => {
+                stderr += data.toString();
+              }
+            };
+            await exec.exec('cat', ['tfplan.txt'], options);
 
-          const output = `### Terraform Plan
-          <details><summary>Show Plan</summary>
+            const output = `### Terraform Plan
+            <details><summary>Show Plan</summary>
 
-          \`\`\`\n
-          ${process.env.TF_CMD}
-          ${stdout}
-          \`\`\`
+            \`\`\`\n
+            ${process.env.TF_CMD}
+            ${stdout}
+            \`\`\`
 
-          </details>`;
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+            </details>`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
       #     cat terraform.plan
 
