@@ -18,9 +18,15 @@ jobs:
           echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                     # to become ready before timing out
           echo "Startup complete"
+          echo "alias terraform=\"tflocal\"" >> ~/.bashrc
+          source ~/.bashrc
 
       - name: Static Analysis Tests
         id: static-analysis-tests
         uses: ./.github/actions/tests_static_analysis
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Unit Tests
+        working-directory: test
+        run: go test -v -timeout 30m
