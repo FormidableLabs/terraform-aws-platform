@@ -41,10 +41,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Go
-        working-directory: test
         uses: actions/setup-go@v3
         with:
           cache: true
+          cache-dependency-path: test/go.sum
 
       - name: Unit Tests
         working-directory: test
