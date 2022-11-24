@@ -10,6 +10,7 @@ jobs:
 
       - name: Start LocalStack
         run: |
+          pip install --upgrade pyopenssl
           pip install localstack awscli-local[ver1] terraform-local # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
