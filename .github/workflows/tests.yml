@@ -25,15 +25,16 @@ jobs:
           tflocal plan -lock=false -out terraform.plan
 
         # generate plain output
-        - run: tflocal show -no-color terraform.plan > terraform.text
+      - name: text
+        run: tflocal show -no-color terraform.plan > terraform.text
 
         # generate json output
-        - run: tflocal show -json terraform.plan > terraform.json
+      - name: json
+        run: tflocal show -json terraform.plan > terraform.json
 
-        - uses: ahmadnassri/action-terraform-report@v3
-          with:
-            # tell the action the plan outputs
-            terraform-text: ${{ github.workspace }}/terraform.text
-            terraform-json: ${{ github.workspace }}/terraform.json
-            remove-stale-reports: true
-
+      - uses: ahmadnassri/action-terraform-report@v3
+        with:
+          # tell the action the plan outputs
+          terraform-text: ${{ github.workspace }}/terraform.text
+          terraform-json: ${{ github.workspace }}/terraform.json
+          remove-stale-reports: true
