@@ -24,33 +24,49 @@ jobs:
           tflocal init
           tflocal validate
           tflocal plan -lock=false -out terraform.plan
-          tfplan="$(tflocal show -no-color terraform.plan)"
-          tfplan="$(echo "${tfplan}" | grep -v "Refreshing state")"
-          tfplan="$(echo -n "$tfplan" | tail -c 60000)"
-          echo "::set-output name=tfplan::$tfplan"
-
+          # tfplan="$(tflocal show -no-color terraform.plan)"
+          # tfplan="$(echo "${tfplan}" | grep -v "Refreshing state")"
+          # tfplan="$(echo -n "$tfplan" | tail -c 60000)"
+          # echo "::set-output name=tfplan::$tfplan"
+          cmd=(tflocal plan -lock=false)
+          "${cmd[@]}" | tee -a tfplan.txt
+          echo "cmd=${cmd[@]}" >> ${GITHUB_OUTPUT}
 
       - uses: actions/github-script@v6
+        env:
+          TF_CMD: ${{ steps.tfplan.outputs.cmd }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `Output \
-            \-
-            #### Terraform Plan
-            <details><summary>Show Plan</summary>
-            \`\`\`terraform\n
-            ${{ steps.tfplan.outputs.tfplan }}
-            \n\`\`\`
-            </details>
+        script: |
+          let stdout = '';
+          let stderr = '';
 
-            *Pusher: @${{ github.actor }};
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+          const options = {};
+          options.listeners = {
+            stdout: (data) => {
+              stdout += data.toString();
+            },
+            stderr: (data) => {
+              stderr += data.toString();
+            }
+          };
+          await exec.exec('cat', ['tfplan.txt'], options);
 
+          const output = `### Terraform Plan
+          <details><summary>Show Plan</summary>
+
+          \`\`\`\n
+          ${process.env.TF_CMD}
+          ${stdout}
+          \`\`\`
+
+          </details>`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
 
       #     cat terraform.plan
 
