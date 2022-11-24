@@ -40,6 +40,20 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          cache: true
+
       - name: Unit Tests
         working-directory: test
         run: go test -v -timeout 30m
+
+      - name: Test with Go
+        run: go test -json > TestResults.json
+
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Go-results
+          path: TestResults.json
