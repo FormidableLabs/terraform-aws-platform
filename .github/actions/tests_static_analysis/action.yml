@@ -1,0 +1,49 @@
+name: Terraform Static Analysis Tests
+description: Runs Terraform Static Analysis Tests - validate and plan
+inputs:
+  GITHUB_TOKEN:
+    description: Workflow GitHub Token (limited permissions)
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Terraform Validate and Plan
+      run: |
+        tflocal init
+        tflocal validate
+        tflocal plan -lock=false -out terraform.plan
+        tflocal show -no-color terraform.plan > terraform.text
+
+    - uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.GITHUB_TOKEN }}
+        script: |
+          let stdout = '';
+          let stderr = '';
+
+          const options = {};
+          options.listeners = {
+            stdout: (data) => {
+              stdout += data.toString();
+            },
+            stderr: (data) => {
+              stderr += data.toString();
+            }
+          };
+          await exec.exec('cat', ['terraform.text'], options);
+
+          const output = `### Terraform Plan
+          <details><summary>Show Plan</summary>
+
+          \`\`\`\n
+          ${stdout}
+          \`\`\`
+
+          </details>`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
