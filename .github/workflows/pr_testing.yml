@@ -51,9 +51,11 @@ jobs:
         run: go test -v -timeout 30m
 
       - name: Test with Go
+        working-directory: test
         run: go test -json > TestResults.json
 
       - name: Upload Go test results
+        working-directory: test
         uses: actions/upload-artifact@v3
         with:
           name: Go-results
