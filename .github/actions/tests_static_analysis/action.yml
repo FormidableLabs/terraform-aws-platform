@@ -14,8 +14,10 @@ runs:
         tflocal validate
         tflocal plan -lock=false -out terraform.plan
         tflocal show -no-color terraform.plan > terraform.text
+      shell: bash
 
     - uses: actions/github-script@v6
+      shell: bash
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
