@@ -34,8 +34,8 @@ jobs:
 
       - name: cat files
         run: |
-          # cat terraform.text
-          cat terraform.json
+          pwd
+          ls -lah /home/runner/work/terraform-aws-platform/terraform-aws-platform/
 
       # - uses: ahmadnassri/action-terraform-report@v3
       #   with:
