@@ -22,6 +22,12 @@ func TestTerraformHelloWorldExample(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
-	output := terraform.Output(t, terraformOptions, "region")
-	assert.Equal(t, "us-east-1", output)
+	accountId := terraform.Output(t, terraformOptions, "account_id")
+	assert.Equal(t, "000000000000", accountId)
+	partition := terraform.Output(t, terraformOptions, "partition")
+	assert.Equal(t, "aws", partition)
+	region := terraform.Output(t, terraformOptions, "region")
+	assert.Equal(t, "us-east-1", region)
+	regionShort := terraform.Output(t, terraformOptions, "region_short")
+	assert.Equal(t, "use1", regionShort)
 }
