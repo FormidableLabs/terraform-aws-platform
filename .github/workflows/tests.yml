@@ -25,4 +25,5 @@ jobs:
       - name: tflocal tests
         run: |
           tflocal init
+          tflocal validate
           tflocal plan
