@@ -18,13 +18,22 @@ jobs:
           echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                     # to become ready before timing out
           echo "Startup complete"
-      - name: Run some Tests against LocalStack
-        run: |
-          awslocal s3 mb s3://test
-          awslocal s3 ls
-          echo "Test Execution complete!"
       - name: tflocal tests
         run: |
           tflocal init
           tflocal validate
-          tflocal plan
+          tflocal plan -lock=false -out terraform.plan
+
+        # generate plain output
+        - run: tflocal show -no-color terraform.plan > terraform.text
+
+        # generate json output
+        - run: tflocal show -json terraform.plan > terraform.json
+
+        - uses: ahmadnassri/action-terraform-report@v3
+          with:
+            # tell the action the plan outputs
+            terraform-text: ${{ github.workspace }}/terraform.text
+            terraform-json: ${{ github.workspace }}/terraform.json
+            remove-stale-reports: true
+
