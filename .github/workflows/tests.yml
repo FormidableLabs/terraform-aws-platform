@@ -32,6 +32,11 @@ jobs:
       - name: json
         run: tflocal show -json terraform.plan > terraform.json
 
+      - name: cat files
+        run: |
+          cat terraform.text
+          cat terraform.json
+
       - uses: ahmadnassri/action-terraform-report@v3
         with:
           # tell the action the plan outputs
