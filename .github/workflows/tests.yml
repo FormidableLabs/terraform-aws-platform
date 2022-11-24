@@ -11,30 +11,66 @@ jobs:
       - name: Start LocalStack
         run: |
           pip install --upgrade pyopenssl
-          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
+          pip install localstack awscli-local[ver1] terraform-local # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
 
           echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                     # to become ready before timing out
           echo "Startup complete"
+      - name: tflocal tests
+        id: tfplan
+        run: |
+          tflocal init
+          tflocal validate
+          tflocal plan -lock=false -out terraform.plan
+          tfplan="$(tflocal show -no-color terraform.plan)"
+          tfplan="$(echo "${tfplan}" | grep -v "Refreshing state")"
+          tfplan="$(echo -n "$tfplan" | tail -c 60000)"
+          echo "::set-output name=tfplan::$tfplan"
 
-      - uses: hashicorp/setup-terraform@v1
+
+      - uses: actions/github-script@v6
         with:
-          terraform_wrapper: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `Output \
+            \-
+            #### Terraform Plan
+            <details><summary>Show Plan</summary>
+            \`\`\`terraform\n
+            ${{ steps.tfplan.outputs.tfplan }}
+            \n\`\`\`
+            </details>
 
-      - run: terraform init
-      - run: terraform plan -lock=false -out terraform.plan
+            *Pusher: @${{ github.actor }};
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
-      # generate plain output
-      - run: terraform show -no-color terraform.plan > terraform.text
 
-      # generate json output
-      - run: terraform show -json terraform.plan > terraform.json
+      #     cat terraform.plan
 
-      - uses: ahmadnassri/action-terraform-report@v3
-        with:
-          # tell the action the plan outputs
-          terraform-text: ${{ github.workspace }}/terraform.text
-          terraform-json: ${{ github.workspace }}/terraform.json
-          remove-stale-reports: true
+      #   # generate plain output
+      # - name: text
+      #   run: tflocal show -no-color terraform.plan > terraform.text
+
+      #   # generate json output
+      # - name: json
+      #   run: tflocal show -json terraform.plan > terraform.json
+
+      # - name: cat files
+      #   run: |
+      #     pwd
+      #     ls -lah /home/runner/work/terraform-aws-platform/terraform-aws-platform/
+      #     ls -lah /home/runner/work/terraform-aws-platform/terraform-aws-platform/terraform.text
+
+      # - uses: ahmadnassri/action-terraform-report@v3
+      #   with:
+      #     # tell the action the plan outputs
+      #     terraform-text: ${{ github.workspace }}/terraform.text
+      #     terraform-json: ${{ github.workspace }}/terraform.json
+      #     remove-stale-reports: true
