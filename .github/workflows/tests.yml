@@ -29,6 +29,7 @@ jobs:
           # tfplan="$(echo -n "$tfplan" | tail -c 60000)"
           # echo "::set-output name=tfplan::$tfplan"
           tflocal show -no-color terraform.plan > terraform.text
+          cat terraform.text
           cmd=$(cat terraform.text)
           echo $cmd
           # echo "cmd=${cmd}" >> ${GITHUB_OUTPUT}
