@@ -26,7 +26,7 @@ jobs:
       - name: Start LocalStack
         run: |
           pip install --upgrade pyopenssl
-          pip install localstack awscli-local[ver1] terraform-local # install LocalStack cli and awslocal
+          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
           localstack start -d                       # Start LocalStack in the background
 
           echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
