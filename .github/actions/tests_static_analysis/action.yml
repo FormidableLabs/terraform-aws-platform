@@ -11,11 +11,11 @@ runs:
     - name: Terraform Validate and Plan
       shell: bash
       run: |
-        tflocal init
-        tflocal fmt --recursive
-        tflocal validate
-        tflocal plan -lock=false -out terraform.plan
-        tflocal show -no-color terraform.plan > terraform.text
+        terraform init
+        terraform fmt --recursive
+        terraform validate
+        terraform plan -lock=false -out terraform.plan
+        terraform show -no-color terraform.plan > terraform.text
 
     - uses: actions/github-script@v6
       with:
