@@ -28,7 +28,8 @@ jobs:
           # tfplan="$(echo "${tfplan}" | grep -v "Refreshing state")"
           # tfplan="$(echo -n "$tfplan" | tail -c 60000)"
           # echo "::set-output name=tfplan::$tfplan"
-          cmd=(tflocal show -no-color terraform.plan > terraform.text)
+          tflocal show -no-color terraform.plan > terraform.text
+          cmd=(cat terraform.text)
           echo $cmd
           # echo "cmd=${cmd}" >> ${GITHUB_OUTPUT}
 
