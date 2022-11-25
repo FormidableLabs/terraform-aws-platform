@@ -15,6 +15,7 @@ runs:
         cache-dependency-path: test/go.sum
 
     - name: Unit Tests Results
+      shell: bash
       if: success() || failure()
       working-directory: test
       run: go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text

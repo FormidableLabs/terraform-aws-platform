@@ -40,7 +40,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Unit Tests Tests
+      - name: Unit Tests
         id: unit-tests
         uses: ./.github/actions/unit-tests
         with:
