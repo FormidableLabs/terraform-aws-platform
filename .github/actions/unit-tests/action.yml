@@ -20,23 +20,33 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-    - name: Run tests
-      uses: mathiasvr/command-output@v1
-      id: tests
-      if: success() || failure()
-      with:
-        run: |
-          cd test
-          go test -timeout 30m
-
-    - name: Unit Tests Summary
+    - name: Unit Tests
       shell: bash
       if: success() || failure()
       working-directory: test
       run: |
-        echo ${{ steps.tests.outputs.stdout }}
-        echo ${{ steps.tests.outputs.stderr }}
-        # go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > testSummary.text
+        go test -timeout 30m 2>&1 | tee testLog.text
+        result_code=${PIPESTATUS[0]}
+        cat testLog.text
+        exit $result_code
+
+    # - name: Run tests
+    #   uses: mathiasvr/command-output@v1
+    #   id: tests
+    #   if: success() || failure()
+    #   with:
+    #     run: |
+    #       cd test
+    #       go test -timeout 30m
+
+    # - name: Unit Tests Summary
+    #   shell: bash
+    #   if: success() || failure()
+    #   working-directory: test
+    #   run: |
+    #     echo ${{ steps.tests.outputs.stdout }}
+    #     echo ${{ steps.tests.outputs.stderr }}
+    #     # go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > testSummary.text
 
     # - name: Report Unit Test Summary
     #   if: success() || failure()
