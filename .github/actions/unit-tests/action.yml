@@ -18,7 +18,11 @@ runs:
       shell: bash
       if: success() || failure()
       working-directory: test
-      run: go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
+      run: |
+        # display the results in job log:
+        go test -timeout 30m
+        # send FAIL or PASS as PR comment:
+        go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
 
     - uses: actions/github-script@v6
       with:
