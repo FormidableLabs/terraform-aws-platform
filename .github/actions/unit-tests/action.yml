@@ -14,19 +14,24 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-    - name: Unit Tests
+    - name: Unit Tests Log
       shell: bash
       if: success() || failure()
       working-directory: test
       run: |
-        # display the results in job log:
-        go test -timeout 30m | cat
-        # send FAIL or PASS as PR comment:
-        go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
-        pwd
-        cat terratest.text
+        go test -timeout 30m 2>&1 | tee testLog.text
+        result_code=${PIPESTATUS[0]}
+        cat testLog.text
+        exit $result_code
 
-    - name: Report Unit Test Results
+    - name: Unit Tests Summary
+      shell: bash
+      if: success() || failure()
+      working-directory: test
+      run: |
+        cat testLog.text | grep -A 3000 'FAIL\|PASS' > testSummary.text
+
+    - name: Report Unit Test Summary
       if: success() || failure()
       uses: actions/github-script@v6
       with:
@@ -44,7 +49,7 @@ runs:
               stderr += data.toString();
             }
           };
-          await exec.exec('cat', ['test/terratest.text'], options);
+          await exec.exec('cat', ['test/testSummary.text'], options);
 
           const output = `### Unit Tests Results
           <details><summary>Show Results</summary>
