@@ -14,10 +14,10 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-      - name: Unit Tests Results
-        if: success() || failure()
-        working-directory: test
-        run: go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
+    - name: Unit Tests Results
+      if: success() || failure()
+      working-directory: test
+      run: go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
 
     - uses: actions/github-script@v6
       with:
