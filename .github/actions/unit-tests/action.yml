@@ -24,21 +24,18 @@ runs:
       uses: mathiasvr/command-output@v1
       id: tests
       if: success() || failure()
-      working-directory: test
       with:
         run: |
+          cd test
           go test -timeout 30m
 
     - name: Unit Tests Summary
       shell: bash
       if: success() || failure()
-      env:
-        STDOUT: ${{ steps.tests.outputs.stdout }}
-        STDERR: ${{ steps.tests.outputs.stderr }}
       working-directory: test
       run: |
-        echo ${STDOUT}
-        echo ${STDERR}
+        echo ${{ steps.tests.outputs.stdout }}
+        echo ${{ steps.tests.outputs.stderr }}
         # go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > testSummary.text
 
     # - name: Report Unit Test Summary
