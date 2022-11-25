@@ -20,57 +20,58 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-    - name: Unit Tests Results
-      id: plan
-      shell: bash
+    - name: Run tests
+      uses: mathiasvr/command-output@v1
+      id: tests
       if: success() || failure()
       working-directory: test
-      run: |
-        # display the results in job log:
-        cmd=(go test -timeout 30m)
-        echo "cmd=${cmd[@]}" >> ${GITHUB_OUTPUT}
+      with:
+        run: |
+          go test -timeout 30m
 
     - name: Unit Tests Summary
       shell: bash
       if: success() || failure()
       env:
-        TF_CMD: ${{ steps.plan.outputs.cmd }}
+        STDOUT: ${{ steps.tests.outputs.stdout }}
+        STDERR: ${{ steps.tests.outputs.stderr }}
       working-directory: test
       run: |
-        echo ${TF_CMD}
+        echo ${STDOUT}
+        echo ${STDERR}
         # go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > testSummary.text
 
-    - name: Report Unit Test Summary
-      if: success() || failure()
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
-        script: |
-          let stdout = '';
-          let stderr = '';
+    # - name: Report Unit Test Summary
+    #   if: success() || failure()
+    #   uses: actions/github-script@v6
+    #   with:
+    #     github-token: ${{ inputs.GITHUB_TOKEN }}
+    #     script: |
+    #       let stdout = '';
+    #       let stderr = '';
 
-          const options = {};
-          options.listeners = {
-            stdout: (data) => {
-              stdout += data.toString();
-            },
-            stderr: (data) => {
-              stderr += data.toString();
-            }
-          };
-          await exec.exec('cat', ['test/testSummary.text'], options);
+    #       const options = {};
+    #       options.listeners = {
+    #         stdout: (data) => {
+    #           stdout += data.toString();
+    #         },
+    #         stderr: (data) => {
+    #           stderr += data.toString();
+    #         }
+    #       };
+    #       await exec.exec('cat', ['test/testSummary.text'], options);
 
-          const output = `### Unit Tests Results
-          <details><summary>Show Results</summary>
+    #       const output = `### Unit Tests Results
+    #       <details><summary>Show Results</summary>
 
-          \`\`\`\n
-          ${stdout}
-          \`\`\`
+    #       \`\`\`\n
+    #       ${stdout}
+    #       \`\`\`
 
-          </details>`;
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+    #       </details>`;
+    #       github.rest.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: output
+    #       })
