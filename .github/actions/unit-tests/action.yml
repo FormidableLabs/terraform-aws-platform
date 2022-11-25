@@ -21,6 +21,7 @@ runs:
         cache-dependency-path: test/go.sum
 
     - name: Unit Tests Results
+      id: plan
       shell: bash
       if: success() || failure()
       working-directory: test
