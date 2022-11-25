@@ -16,18 +16,19 @@ runs:
 
     - name: Unit Tests
       shell: bash
-      if: always()
+      if: success() || failure()
       working-directory: test
       run: |
         # display the results in job log:
-        go test -timeout 30m
+        go test -timeout 30m | > results.text
+        cat results.text
         # send FAIL or PASS as PR comment:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
         pwd
         cat terratest.text
 
     - name: Report Unit Test Results
-      if: always()
+      if: success() || failure()
       uses: actions/github-script@v6
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
