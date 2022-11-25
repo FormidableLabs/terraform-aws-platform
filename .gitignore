@@ -1,4 +1,5 @@
 .terraform.lock.hcl
 .terraform
 terraform.tfstate*
-test/terratest.text
+test/testLog.text
+test/testSummary.text

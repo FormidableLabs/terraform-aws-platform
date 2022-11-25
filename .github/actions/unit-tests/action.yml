@@ -26,10 +26,10 @@ runs:
       working-directory: test
       run: |
         # display the results in job log:
-        if [[ "$(go test -timeout 30m | cat > results.text | grep -A 3000 'FAIL\|PASS' > terratest.text)" -ne "0" ]]; then
+        if [[ "$(go test -timeout 30m | cat > testLog.text | grep -A 3000 'FAIL\|PASS' > testSummary.text)" -ne "0" ]]; then
           echo ""
         fi
-        cat results.txt
+        cat testLog.text
 
     - name: Report Unit Test Results
       if: success() || failure()
@@ -49,7 +49,7 @@ runs:
               stderr += data.toString();
             }
           };
-          await exec.exec('cat', ['test/terratest.text'], options);
+          await exec.exec('cat', ['test/testSummary.text], options);
 
           const output = `### Unit Tests Results
           <details><summary>Show Results</summary>
