@@ -20,8 +20,7 @@ runs:
       working-directory: test
       run: |
         # display the results in job log:
-        go test -timeout 30m | > results.text
-        cat results.text
+        go test -timeout 30m | cat
         # send FAIL or PASS as PR comment:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
         pwd
