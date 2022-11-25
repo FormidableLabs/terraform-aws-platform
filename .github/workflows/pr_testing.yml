@@ -4,6 +4,7 @@ on:
 
 jobs:
   hide-comment:
+    runs-on: ubuntu-latest
     steps:
       - uses: int128/hide-comment-action@v1
 
