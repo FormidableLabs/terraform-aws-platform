@@ -1,0 +1,53 @@
+name: Terraform Unit Tests
+description: Runs Terraform Unit Tests Via TerraTest
+inputs:
+  GITHUB_TOKEN:
+    description: Workflow GitHub Token (limited permissions)
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        cache: true
+        cache-dependency-path: test/go.sum
+
+      - name: Unit Tests Results
+        if: success() || failure()
+        working-directory: test
+        run: go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
+
+    - uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.GITHUB_TOKEN }}
+        script: |
+          let stdout = '';
+          let stderr = '';
+
+          const options = {};
+          options.listeners = {
+            stdout: (data) => {
+              stdout += data.toString();
+            },
+            stderr: (data) => {
+              stderr += data.toString();
+            }
+          };
+          await exec.exec('cat', ['terratest.text'], options);
+
+          const output = `### Unit Tests Results
+          <details><summary>Show Results</summary>
+
+          \`\`\`\n
+          ${stdout}
+          \`\`\`
+
+          </details>`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })

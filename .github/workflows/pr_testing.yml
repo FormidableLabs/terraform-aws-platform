@@ -36,26 +36,12 @@ jobs:
 
       - name: Static Analysis Tests
         id: static-analysis-tests
-        uses: ./.github/actions/tests_static_analysis
+        uses: ./.github/actions/static-analysis-tests
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Go
-        uses: actions/setup-go@v3
+      - name: Unit Tests Tests
+        id: unit-tests
+        uses: ./.github/actions/unit-tests
         with:
-          cache: true
-          cache-dependency-path: test/go.sum
-
-      - name: Unit Tests
-        working-directory: test
-        run: go test -v -timeout 30m
-
-      - name: Test with Go
-        working-directory: test
-        run: go test -json > TestResults.json
-
-      - name: Upload Go test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: Go-results
-          path: test/TestResults.json
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
