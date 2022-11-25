@@ -8,6 +8,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # - name: Setup Terratests
+    #   shell: bash
+    #   run: |
+    #     go mod init github.com/${GITHUB_REPOSITORY}
+    #     go mod tidy
+
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
