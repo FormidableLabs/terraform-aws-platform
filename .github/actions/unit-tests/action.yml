@@ -20,18 +20,26 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-    - name: Unit Tests
+    - name: Unit Tests Results
       shell: bash
       if: success() || failure()
       working-directory: test
       run: |
         # display the results in job log:
-        if [[ "$(go test -timeout 30m | cat > testLog.text | grep -A 3000 'FAIL\|PASS' > testSummary.text)" -ne "0" ]]; then
-          echo ""
-        fi
-        cat testLog.text
+        cmd=(go test -timeout 30m)
+        echo "cmd=${cmd[@]}" >> ${GITHUB_OUTPUT}
 
-    - name: Report Unit Test Results
+    - name: Unit Tests Summary
+      shell: bash
+      if: success() || failure()
+      env:
+        TF_CMD: ${{ steps.plan.outputs.cmd }}
+      working-directory: test
+      run: |
+        echo ${TF_CMD}
+        # go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > testSummary.text
+
+    - name: Report Unit Test Summary
       if: success() || failure()
       uses: actions/github-script@v6
       with:
