@@ -36,7 +36,7 @@ runs:
               stderr += data.toString();
             }
           };
-          await exec.exec('cat', ['terratest.text'], options);
+          await exec.exec('cat', ['test/terratest.text'], options);
 
           const output = `### Unit Tests Results
           <details><summary>Show Results</summary>
