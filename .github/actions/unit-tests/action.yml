@@ -26,11 +26,10 @@ runs:
       working-directory: test
       run: |
         # display the results in job log:
-        if [[ "$(go test -timeout 30m | cat )" -ne "0" ]]; then
-          grep -A 3000 'FAIL\|PASS' > terratest.text
-        else
-          grep -A 3000 'FAIL\|PASS' > terratest.text
+        if [[ "$(go test -timeout 30m | cat > results.text | grep -A 3000 'FAIL\|PASS' > terratest.text)" -ne "0" ]]; then
+          echo ""
         fi
+        cat results.txt
 
     - name: Report Unit Test Results
       if: success() || failure()
