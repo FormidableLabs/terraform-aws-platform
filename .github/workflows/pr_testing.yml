@@ -1,0 +1,27 @@
+name: Test Suites for PR
+on:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup LocalStack
+        id: setup-localstack
+        uses: ./.github/actions/setup-localstack
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Static Analysis Tests
+        id: static-analysis-tests
+        uses: ./.github/actions/static-analysis-tests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Unit Tests
+        id: unit-tests
+        uses: ./.github/actions/unit-tests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
