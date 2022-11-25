@@ -14,7 +14,7 @@ runs:
         cache: true
         cache-dependency-path: test/go.sum
 
-    - name: Unit Tests Results
+    - name: Unit Tests
       shell: bash
       if: success() || failure()
       working-directory: test
@@ -24,7 +24,8 @@ runs:
         # send FAIL or PASS as PR comment:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
 
-    - uses: actions/github-script@v6
+    - name: Report Unit Test Results
+      uses: actions/github-script@v6
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
