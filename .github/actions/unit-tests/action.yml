@@ -27,7 +27,7 @@ runs:
       run: |
         # display the results in job log:
         if [[ "$(go test -timeout 30m | cat)" -ne "0" ]]; then
-          go test -timeout 30m | cat
+          echo ""
         fi
         # send FAIL or PASS as PR comment:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
