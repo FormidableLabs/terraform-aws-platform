@@ -39,6 +39,7 @@ resource "aws_lambda_function" "test_lambda" {
 ```
 
 <!-- BEGIN_TF_DOCS -->
+<!-- Force-rerun -->
 
 ## Requirements
 
