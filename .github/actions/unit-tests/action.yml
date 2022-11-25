@@ -23,6 +23,8 @@ runs:
         go test -timeout 30m
         # send FAIL or PASS as PR comment:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
+        pwd
+        cat terratest.text
 
     - name: Report Unit Test Results
       if: success() || failure()
