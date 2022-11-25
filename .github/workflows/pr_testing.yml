@@ -3,34 +3,29 @@ on:
   pull_request:
 
 jobs:
-  delete-comments:
-    runs-on: ubuntu-latest
+  hide-comment:
     steps:
-      - uses: izhangzhihao/delete-comment@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_user_name: github-actions[bot]
-          issue_number: ${{ github.event.number }} # remove comments from the current PR
+      - uses: int128/hide-comment-action@v1
 
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Setup LocalStack
-        id: setup-localstack
-        uses: ./.github/actions/setup-localstack
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Setup LocalStack
+  #       id: setup-localstack
+  #       uses: ./.github/actions/setup-localstack
+  #       with:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Static Analysis Tests
-        id: static-analysis-tests
-        uses: ./.github/actions/static-analysis-tests
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Static Analysis Tests
+  #       id: static-analysis-tests
+  #       uses: ./.github/actions/static-analysis-tests
+  #       with:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Unit Tests
-        id: unit-tests
-        uses: ./.github/actions/unit-tests
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Unit Tests
+  #       id: unit-tests
+  #       uses: ./.github/actions/unit-tests
+  #       with:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
