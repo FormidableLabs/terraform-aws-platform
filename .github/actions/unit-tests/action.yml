@@ -25,6 +25,7 @@ runs:
         go test -timeout 30m | grep -A 3000 'FAIL\|PASS' > terratest.text
 
     - name: Report Unit Test Results
+      if: success() || failure()
       uses: actions/github-script@v6
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
