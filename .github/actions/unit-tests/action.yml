@@ -31,7 +31,6 @@ runs:
       if: success() || failure()
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
           let stdout = '';
           let stderr = '';
