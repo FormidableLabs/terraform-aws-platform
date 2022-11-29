@@ -15,48 +15,46 @@ runs:
       if: success() || failure()
       working-directory: test
       run: |
-        go test -timeout 30m 2>&1 | tee testLog.text
-        result_code=${PIPESTATUS[0]}
-        cat testLog.text
-        exit $result_code
+        go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
+        go test -timeout 30m | tee test_output.log
+        terratest_log_parser -testlog test_output.log -outputdir test_output
 
-    - name: Unit Tests Summary
-      shell: bash
-      if: success() || failure()
-      working-directory: test
-      run: |
-        cat testLog.text | grep -A 3000 'FAIL\|PASS' > testSummary.text
-
-    - name: Report Unit Test Summary
-      if: success() || failure()
-      uses: actions/github-script@v6
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+      if: always() # always run even if the previous step fails
       with:
-        script: |
-          let stdout = '';
-          let stderr = '';
+        report_paths: "test/*.xml"
 
-          const options = {};
-          options.listeners = {
-            stdout: (data) => {
-              stdout += data.toString();
-            },
-            stderr: (data) => {
-              stderr += data.toString();
-            }
-          };
-          await exec.exec('cat', ['test/testSummary.text'], options);
+    # - name: Report Unit Test Summary
+    #   if: success() || failure()
+    #   uses: actions/github-script@v6
+    #   with:
+    #     script: |
+    #       let stdout = '';
+    #       let stderr = '';
 
-          const output = `### Unit Tests Results
-          <details><summary>Show Results</summary>
+    #       const options = {};
+    #       options.listeners = {
+    #         stdout: (data) => {
+    #           stdout += data.toString();
+    #         },
+    #         stderr: (data) => {
+    #           stderr += data.toString();
+    #         }
+    #       };
+    #       await exec.exec('cat', ['test/testSummary.text'], options);
 
-          \`\`\`\n
-          ${stdout}
-          \`\`\`
+    #       const output = `### Unit Tests Results
+    #       <details><summary>Show Results</summary>
 
-          </details>`;
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+    #       \`\`\`\n
+    #       ${stdout}
+    #       \`\`\`
+
+    #       </details>`;
+    #       github.rest.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: output
+    #       })

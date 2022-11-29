@@ -3,3 +3,4 @@
 terraform.tfstate*
 test/testLog.text
 test/testSummary.text
+test/test_output*
