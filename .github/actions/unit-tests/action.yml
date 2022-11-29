@@ -15,7 +15,7 @@ runs:
       if: success() || failure()
       working-directory: test
       run: |
-        go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
+        GOBIN=/usr/local/bin/ go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
         go test -timeout 30m | tee test_output.log
         terratest_log_parser -testlog test_output.log -outputdir test_output
 
