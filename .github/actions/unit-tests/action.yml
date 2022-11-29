@@ -26,8 +26,6 @@ runs:
       run: |
         GOBIN=/usr/local/bin/ go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
         terratest_log_parser -testlog test_output.log -outputdir test_output
-        ls test_output
-        cat test_output/summary.log
 
     - name: Report Unit Test Summary
       if: success() || failure()
