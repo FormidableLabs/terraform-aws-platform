@@ -1,5 +1,9 @@
 name: Terraform Static Analysis Tests
 description: Runs Terraform Static Analysis Tests - format, validate and plan
+inputs:
+  aws_default_region:
+    description: AWS default region for testing
+    required: true
 
 runs:
   using: "composite"
@@ -12,6 +16,8 @@ runs:
         terraform validate
         terraform plan -lock=false -out terraform.plan
         terraform show -no-color terraform.plan > terraform.text
+      env:
+        AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
 
     - name: Report Terraform Plan
       uses: actions/github-script@v6
