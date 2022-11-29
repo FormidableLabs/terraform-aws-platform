@@ -17,7 +17,9 @@ runs:
       run: |
         GOBIN=/usr/local/bin/ go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
         go test -timeout 30m | tee test_output.log
+        result_code=${PIPESTATUS[0]}
         terratest_log_parser -testlog test_output.log -outputdir test_output
+        exit $result_code
 
     - name: Report Unit Test Summary
       if: success() || failure()
