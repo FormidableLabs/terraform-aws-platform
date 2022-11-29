@@ -38,6 +38,45 @@ resource "aws_lambda_function" "test_lambda" {
 
 ```
 
+<!-- BEGIN_TF_DOCS -->
+
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name                                             | Version |
+| ------------------------------------------------ | ------- |
+| <a name="provider_aws"></a> [aws](#provider_aws) | n/a     |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name                                                                                                                       | Type        |
+| -------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_partition.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition)             | data source |
+| [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region)                   | data source |
+
+## Inputs
+
+No inputs.
+
+## Outputs
+
+| Name                                                                    | Description |
+| ----------------------------------------------------------------------- | ----------- |
+| <a name="output_account_id"></a> [account_id](#output_account_id)       | Outputs     |
+| <a name="output_partition"></a> [partition](#output_partition)          | n/a         |
+| <a name="output_region"></a> [region](#output_region)                   | n/a         |
+| <a name="output_region_short"></a> [region_short](#output_region_short) | n/a         |
+
+<!-- END_TF_DOCS -->
+
 [maintenance-image]: https://img.shields.io/badge/maintenance-active-green.svg?color=brightgreen&style=flat
 
 ## Maintenance Status
