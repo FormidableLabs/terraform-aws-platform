@@ -23,9 +23,13 @@ runs:
       uses: mikepenz/action-junit-report@v3
       if: always() # always run even if the previous step fails
       with:
-        report_paths: "test/*.xml"
+        report_paths: test/*.xml
         check_name: Unit Test Report
-        
+
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: test/*.xml
 
     - name: Report Unit Test Summary
       if: success() || failure()
