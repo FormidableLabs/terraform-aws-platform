@@ -26,10 +26,10 @@ runs:
         report_paths: test/test_output/*.xml
         check_name: Unit Test Report
 
-    # - name: Code Coverage Report
-    #   uses: irongut/CodeCoverageSummary@v1.3.0
-    #   with:
-    #     filename: test/*.xml
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: test/test_output/*.xml
 
     - name: Report Unit Test Summary
       if: success() || failure()
