@@ -24,37 +24,39 @@ runs:
       if: always() # always run even if the previous step fails
       with:
         report_paths: "test/*.xml"
+        check_name: Unit Test Report
+        
 
-    # - name: Report Unit Test Summary
-    #   if: success() || failure()
-    #   uses: actions/github-script@v6
-    #   with:
-    #     script: |
-    #       let stdout = '';
-    #       let stderr = '';
+    - name: Report Unit Test Summary
+      if: success() || failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          let stdout = '';
+          let stderr = '';
 
-    #       const options = {};
-    #       options.listeners = {
-    #         stdout: (data) => {
-    #           stdout += data.toString();
-    #         },
-    #         stderr: (data) => {
-    #           stderr += data.toString();
-    #         }
-    #       };
-    #       await exec.exec('cat', ['test/testSummary.text'], options);
+          const options = {};
+          options.listeners = {
+            stdout: (data) => {
+              stdout += data.toString();
+            },
+            stderr: (data) => {
+              stderr += data.toString();
+            }
+          };
+          await exec.exec('cat', ['test/test_output/summary.log'], options);
 
-    #       const output = `### Unit Tests Results
-    #       <details><summary>Show Results</summary>
+          const output = `### Unit Tests Results
+          <details><summary>Show Results</summary>
 
-    #       \`\`\`\n
-    #       ${stdout}
-    #       \`\`\`
+          \`\`\`\n
+          ${stdout}
+          \`\`\`
 
-    #       </details>`;
-    #       github.rest.issues.createComment({
-    #         issue_number: context.issue.number,
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         body: output
-    #       })
+          </details>`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
