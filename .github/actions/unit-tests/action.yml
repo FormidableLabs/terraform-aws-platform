@@ -39,7 +39,6 @@ runs:
           await exec.exec('cat', ['test/test_output/summary.log'], options);
 
           const output = `### Unit Tests Results
-          <summary>Show Results</summary>
 
           \`\`\`\n
           ${stdout}

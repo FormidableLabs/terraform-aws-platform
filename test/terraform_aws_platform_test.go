@@ -25,7 +25,7 @@ func TestTerraformAWSPlatformUsWest2(t *testing.T) {
 
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	accountId := terraform.Output(t, terraformOptions, "account_id")
-	assert.Equal(t, "000000000000", accountId)
+	assert.Equal(t, "848569143948", accountId)
 	partition := terraform.Output(t, terraformOptions, "partition")
 	assert.Equal(t, "aws", partition)
 	region := terraform.Output(t, terraformOptions, "region")
@@ -51,7 +51,7 @@ func TestTerraformAWSPlatformUsEast1(t *testing.T) {
 
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	accountId := terraform.Output(t, terraformOptions, "account_id")
-	assert.Equal(t, "000000000000", accountId)
+	assert.Equal(t, "848569143948", accountId)
 	partition := terraform.Output(t, terraformOptions, "partition")
 	assert.Equal(t, "aws", partition)
 	region := terraform.Output(t, terraformOptions, "region")
