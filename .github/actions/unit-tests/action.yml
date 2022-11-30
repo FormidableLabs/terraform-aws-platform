@@ -46,7 +46,7 @@ runs:
             }
           };
           await exec.exec('cat', ['test/test_output/summary.log'], options);
-          if (stdout.includes("PASS")) {
+          if (stdout.includes("PASS") || stdout.includes("ok")) {
             heading = "### Terratest Unit Test Results - PASSED ✅"
           } else {
             heading = "### Terratest Unit Test Results - FAILED ❌"
