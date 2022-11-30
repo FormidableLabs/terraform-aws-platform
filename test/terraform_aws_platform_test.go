@@ -83,7 +83,7 @@ func TestTerraformAWSPlatformApSoutheast2(t *testing.T) {
 	region := terraform.Output(t, terraformOptions, "region")
 	assert.Equal(t, "ap-southeast-2", region)
 	regionShort := terraform.Output(t, terraformOptions, "region_short")
-	assert.Equal(t, "aps2", regionShort)
+	assert.Equal(t, "apse2", regionShort)
 }
 
 func TestTerraformAWSPlatformEuNorth1(t *testing.T) {
