@@ -34,6 +34,7 @@ runs:
         script: |
           let stdout = '';
           let stderr = '';
+          let heading = '';
 
           const options = {};
           options.listeners = {
@@ -45,8 +46,13 @@ runs:
             }
           };
           await exec.exec('cat', ['test/test_output/summary.log'], options);
+          if (stdout.includes("PASS")) {
+            heading = "### Terratest Unit Test Results - PASSED ✅"
+          } else {
+            heading = "### Terratest Unit Test Results - FAILED ❌"
+          }
 
-          const output = `### Unit Tests Results
+          const output = `${heading}
 
           \`\`\`\n
           ${stdout}
