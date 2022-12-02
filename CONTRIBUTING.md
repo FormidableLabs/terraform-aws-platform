@@ -12,7 +12,7 @@ Thank you for contributing!
 
 The versioning scheme we use is [SemVer](http://semver.org/) and all commit messages must adhere to the [semantic-release](https://semantic-release.gitbook.io/semantic-release/#commit-message-format) format.
 
-The `Check commit messages are in commitlint format` step will fail any Pull Requests not in this format.
+The `Check commit messages are in commitlint format` step will fail any Pull Requests not in this format. Please follow [these steps](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/changing-a-commit-message) to change your commit message and re-push.
 
 For any Breaking Releases (aka Major releases), the words `BREAKING CHANGE: ` **must** be in the footer of the commit message and Pull Request message. This can be achieved with `git commit -m "feat: code change" -m "BREAKING CHANGE: service upgrade"`
 
