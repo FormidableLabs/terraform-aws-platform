@@ -1,4 +1,5 @@
-# terraform-aws-platform
+[![terraform-aws-platform — Formidable, We build the modern web](https://raw.githubusercontent.com/FormidableLabs/terraform-aws-platform/main/terraform-aws-platform-Hero.png)](https://formidable.com/open-source/)
+
 
 [![Maintenance Status][maintenance-image]](#maintenance-status)
 
